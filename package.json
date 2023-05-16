@@ -1,0 +1,24 @@
+{
+  "name": "idempiere-production-controll",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "moment": "^2.29.4",
+    "simple-syntax-highlighter": "^2.2.5",
+    "vue": "^3.2.47",
+    "vue-codemirror": "^6.1.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.2",
+    "vue-tsc": "^1.4.2"
+  }
+}
