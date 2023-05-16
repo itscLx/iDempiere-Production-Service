@@ -3,14 +3,17 @@
 		<div class="header">
 			<header class="header">
 				<div class="logo">
-					<img src="./assets/logo.php.png" alt="Logo" />
+					<img src="./assets/logo.png" alt="Logo" />
 				</div>
 			</header>
 		</div>
-		<div class="switch-container">
-			<h3>Production Orders</h3>
-			<v-spacer />
-			<v-row class="justify-end">
+		<div class="switch-container" style="align-items: center">
+			<div class="float-left" style="margin-top: 5px; margin-left: 30px">
+				<h3>Production Orders</h3>
+			</div>
+			<div
+				class="float-right switch-container"
+				style="margin-top: 10px; margin-right: 30px">
 				<label for="switch" class="switch-label">Include Produced:</label>
 				<input
 					type="checkbox"
@@ -23,7 +26,7 @@
 						switch: true,
 						'switch-produced': showNotCompleted,
 					}"></label>
-			</v-row>
+			</div>
 		</div>
 
 		<div class="product-table">
@@ -241,9 +244,7 @@ export default defineComponent({
 }
 
 .switch-container {
-	display: flex;
 	align-items: center;
-	justify-content: center;
 	margin: 10px 0;
 }
 
@@ -335,5 +336,19 @@ td {
 
 .green-button {
 	color: white;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.clearfix::after {
+	content: "";
+	display: table;
+	clear: both;
 }
 </style>
