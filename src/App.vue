@@ -1,34 +1,36 @@
 <template>
 	<div class="custom-font">
-		<div class="header">
-			<header class="header">
-				<div class="logo">
-					<img src="../src/assets/logo-216ceb58.png" alt="Logo" />
+		<div class="container-header">
+			<div class="header">
+				<header class="header">
+					<div class="logo">
+						<img src="../src/assets/logo-216ceb58.png" alt="Logo" />
+					</div>
+				</header>
+			</div>
+			<div class="header-container" style="align-items: center">
+				<div class="float-left" style="margin-top: 5px; margin-left: 30px">
+					<h3>Production Orders</h3>
 				</div>
-			</header>
-		</div>
-		<div class="switch-container" style="align-items: center">
-			<div class="float-left" style="margin-top: 5px; margin-left: 30px">
-				<h3>Production Orders</h3>
-			</div>
-			<div
-				class="float-right switch-container"
-				style="margin-top: 10px; margin-right: 30px">
-				<label for="switch" class="switch-label">Include Produced:</label>
-				<input
-					type="checkbox"
-					id="switch"
-					v-model="showNotCompleted"
-					class="switch-input" />
-				<label
-					for="switch"
-					:class="{
-						switch: true,
-						'switch-produced': showNotCompleted,
-					}"></label>
-			</div>
-			<div class="countdown">
-				<p v-if="countdown > 0">Reloading in {{ countdown }} seconds...</p>
+				<div
+					class="switch-container"
+					style="margin-right: 30px; align-items: center">
+					<label for="switch" class="switch-label">Include Produced:</label>
+					<input
+						type="checkbox"
+						id="switch"
+						v-model="showNotCompleted"
+						class="switch-input" />
+					<label
+						for="switch"
+						:class="{
+							switch: true,
+							'switch-produced': showNotCompleted,
+						}"></label>
+				</div>
+				<div class="countdown">
+					<p v-if="countdown > 0">Reloading in {{ countdown }} seconds...</p>
+				</div>
 			</div>
 		</div>
 
@@ -270,12 +272,22 @@ export default defineComponent({
 	padding-top: 10px;
 	background-color: #f2f2f2;
 }
+.container-header {
+	margin-top: -10px;
+	margin-left: -10px;
+}
 
 .logo img {
 	height: 40px;
 }
 
 .switch-container {
+	align-items: center;
+	margin: 10px 0;
+	float: right;
+}
+
+.header-container {
 	align-items: center;
 	margin: 10px 0;
 }
@@ -297,6 +309,8 @@ export default defineComponent({
 	background-color: #ccc;
 	cursor: pointer;
 	overflow: hidden;
+	align-items: center;
+	margin-top: 15px;
 }
 
 .switch::after {
@@ -386,6 +400,7 @@ td {
 
 .float-right {
 	float: right;
+	align-items: center;
 }
 
 .clearfix::after {
