@@ -89,7 +89,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<h3>Confirmation</h3>
+			<h3>Confirmations</h3>
 			<table class="table">
 				<thead>
 					<tr>
@@ -265,7 +265,9 @@ export default defineComponent({
 .header {
 	display: flex;
 	align-items: center;
-	padding: 10px;
+	padding-left: 25px;
+	padding-bottom: 10px;
+	padding-top: 10px;
 	background-color: #f2f2f2;
 }
 
