@@ -27,6 +27,9 @@
 						'switch-produced': showNotCompleted,
 					}"></label>
 			</div>
+			<div class="countdown">
+				<p v-if="countdown > 0">Reloading in {{ countdown }} seconds...</p>
+			</div>
 		</div>
 
 		<div class="product-table">
@@ -159,11 +162,20 @@ export default defineComponent({
 			products: [] as Product[],
 			confirmations: [] as Confirmation[],
 			showNotCompleted: false,
+			countdown: 20,
 		};
 	},
 	mounted() {
 		this.fetchProductionOrders();
 		this.fetchConfirmations();
+
+		setInterval(() => {
+			if (this.countdown > 0) {
+				this.countdown--;
+			} else {
+				location.reload();
+			}
+		}, 1000);
 	},
 	computed: {
 		filteredProducts(): Product[] {
@@ -208,11 +220,13 @@ export default defineComponent({
 					await axios.delete(
 						`http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/reverse-production-confirmation(${product.productionOrderId})`
 					);
+					location.reload();
 					console.log("Product reset successfully!");
 				} else {
-					await axios.post(
+					await axios.get(
 						`http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/start-production/production-order(${product.productionOrderId})`
 					);
+					location.reload();
 					console.log("Product produced successfully!");
 				}
 			} catch (error) {
@@ -291,14 +305,14 @@ export default defineComponent({
 	width: 16px;
 	height: 16px;
 	border-radius: 50%;
-	background-color: #4caf50; /* Green color */
+	background-color: grey; /* Green color */
 	transition: transform 0.2s ease-in-out;
 	transform: translateX(0);
 }
 
 .switch-input:checked + .switch::after {
 	transform: translateX(100%);
-	background-color: #f44336; /* Red color */
+	background-color: grey; /* Red color */
 }
 
 .table {
@@ -353,6 +367,11 @@ td {
 .red-button {
 	color: white;
 	background-color: #f44336;
+	transition: background-color 0.2s ease-in-out; /* Add transition for smooth effect */
+}
+
+.red-button:hover {
+	background-color: #c62828; /* Darker red color for hover */
 }
 
 .green-button {
@@ -376,5 +395,15 @@ td {
 .custom-font {
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
 		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.countdown {
+	text-align: center;
+	margin-top: 10px;
+}
+
+.countdown p {
+	font-size: 14px;
+	color: #999;
 }
 </style>
