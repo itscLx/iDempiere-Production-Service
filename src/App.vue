@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<div class="custom-font">
 		<div class="header">
 			<header class="header">
 				<div class="logo">
-					<img src="./assets/logo.png" alt="Logo" />
+					<img src="../src/assets/logo-216ceb58.png" alt="Logo" />
 				</div>
 			</header>
 		</div>
@@ -52,20 +52,35 @@
 						<td>{{ product.quantity }} {{ product.quantityUnitCode }}</td>
 						<td>{{ format_date(product.plannedEndDateTime, "DD.MM.YYYY") }}</td>
 						<td>
-							<span v-if="product.produced" class="completed-status"
+							<span
+								v-if="product.status === 'PRODUCED'"
+								class="completed-status"
 								>Completed</span
+							>
+							<span
+								v-else-if="product.status === 'PENDING'"
+								class="pending-status"
+								>Pending</span
 							>
 							<span v-else class="not-completed-status">Not Completed</span>
 						</td>
 						<td>
 							<button
+								v-if="product.status !== 'PENDING'"
 								@click="handleActionButton(product)"
 								class="produce-button"
 								:class="{
-									'red-button': product.produced,
-									'green-button': !product.produced,
-								}">
-								{{ product.produced ? "Reset" : "Produce" }}
+									'red-button': product.status === 'PRODUCED',
+									'green-button': product.status !== 'Completed',
+								}"
+								:disabled="product.status === 'PENDING'">
+								{{
+									product.status === "PRODUCED"
+										? "Reset"
+										: product.status === "PENDING"
+										? "PENDING"
+										: "Produce"
+								}}
 							</button>
 						</td>
 					</tr>
@@ -120,7 +135,7 @@ interface Product {
 	plannedStartDateTime: string | null;
 	plannedEndDateTime: string | null;
 	components: Component[];
-	produced: boolean;
+	status: string;
 }
 
 interface Component {
@@ -152,17 +167,18 @@ export default defineComponent({
 	},
 	computed: {
 		filteredProducts(): Product[] {
-			if (this.showNotCompleted) {
-				return this.products.filter((product) => !product.produced);
+			if (!this.showNotCompleted) {
+				return this.products.filter((product) => product.status !== "PRODUCED");
+			} else {
+				return this.products.filter((product) => product);
 			}
-			return this.products.filter((product) => product);
 		},
 	},
 	methods: {
 		async fetchProductionOrders() {
 			try {
 				const response = await axios.get(
-					"http://172.16.7.34:8080/iDempiere/web-services/production/production-orders",
+					"http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/production-orders",
 					{
 						params: {
 							includeProducedProductionOrders: true,
@@ -178,7 +194,7 @@ export default defineComponent({
 		async fetchConfirmations() {
 			try {
 				const response = await axios.get(
-					"http://172.16.7.34:8080/iDempiere/web-services/production/confirmations"
+					"http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/confirmations"
 				);
 				console.log(response.data);
 				this.confirmations = response.data as Confirmation[];
@@ -188,14 +204,14 @@ export default defineComponent({
 		},
 		async handleActionButton(product: Product): Promise<void> {
 			try {
-				if (product.produced) {
+				if (product.status !== "NOT_STARTED") {
 					await axios.delete(
-						`http://172.16.7.34:8080/iDempiere/web-services/production/reverse-production-confirmation/${product.productionOrderId}`
+						`http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/reverse-production-confirmation(${product.productionOrderId})`
 					);
 					console.log("Product reset successfully!");
 				} else {
 					await axios.post(
-						`http://172.16.7.34:8080/iDempiere/web-services/production/start-production/${product.productionOrderId}`
+						`http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/start-production/production-order(${product.productionOrderId})`
 					);
 					console.log("Product produced successfully!");
 				}
@@ -206,7 +222,7 @@ export default defineComponent({
 		async handleResetButton(confirmation: Confirmation): Promise<void> {
 			try {
 				await axios.delete(
-					`http://172.16.7.34:8080/iDempiere/web-services/production/reverse-production-confirmation/${confirmation.orderId}`
+					`http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/reverse-production-confirmation(${confirmation.orderId})`
 				);
 				location.reload();
 			} catch (error) {
@@ -312,6 +328,11 @@ export default defineComponent({
 	font-weight: bold;
 }
 
+.pending-status {
+	color: orange;
+	font-weight: bold;
+}
+
 .produce-button {
 	padding: 5px 10px;
 	background-color: #4caf50;
@@ -350,5 +371,10 @@ td {
 	content: "";
 	display: table;
 	clear: both;
+}
+
+.custom-font {
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 </style>
