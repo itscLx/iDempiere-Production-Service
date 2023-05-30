@@ -6,6 +6,9 @@
 					<div class="logo">
 						<img src="../src/assets/logo-216ceb58.png" alt="Logo" />
 					</div>
+					<link
+						rel="stylesheet"
+						href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 				</header>
 			</div>
 			<div class="header-container" style="align-items: center">
@@ -70,6 +73,10 @@
 							<span v-else class="not-completed-status">Not Completed</span>
 						</td>
 						<td>
+							<i
+								class="fas fa-info-circle info-icon"
+								@click="showInfo(product.components)"></i>
+
 							<button
 								v-if="product.status !== 'PENDING'"
 								@click="handleActionButton(product)"
@@ -164,7 +171,8 @@ export default defineComponent({
 			products: [] as Product[],
 			confirmations: [] as Confirmation[],
 			showNotCompleted: false,
-			countdown: 20,
+			countdown: 60,
+			showInfoModal: false,
 		};
 	},
 	mounted() {
@@ -202,6 +210,7 @@ export default defineComponent({
 				console.log(response.data);
 				this.products = response.data as Product[];
 			} catch (error) {
+				alert(error.response.data.error);
 				console.error(error);
 			}
 		},
@@ -213,6 +222,7 @@ export default defineComponent({
 				console.log(response.data);
 				this.confirmations = response.data as Confirmation[];
 			} catch (error) {
+				alert(error.response.data.error);
 				console.error(error);
 			}
 		},
@@ -232,6 +242,7 @@ export default defineComponent({
 					console.log("Product produced successfully!");
 				}
 			} catch (error) {
+				alert(error.response.data.error);
 				console.error(error);
 			}
 		},
@@ -242,6 +253,7 @@ export default defineComponent({
 				);
 				location.reload();
 			} catch (error) {
+				alert(error.response.data.error);
 				console.error(error);
 			}
 		},
@@ -249,6 +261,15 @@ export default defineComponent({
 			if (value) {
 				return moment(String(value)).format(format);
 			}
+		},
+		showInfo(components: Component[]) {
+			let componentList = components
+				.map(
+					(component) =>
+						`${component.productName} - ${component.quantity} ${component.quantityUnitCode}`
+				)
+				.join("\n");
+			alert(`Components:\n${componentList}`);
 		},
 	},
 });
@@ -422,5 +443,10 @@ td {
 .countdown p {
 	font-size: 14px;
 	color: #999;
+}
+.info-icon {
+	cursor: pointer;
+	font-weight: bold;
+	margin-right: 10px;
 }
 </style>
