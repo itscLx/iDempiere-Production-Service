@@ -252,7 +252,7 @@ export default defineComponent({
 					`http://iwiliot-4.campus.fh-ludwigshafen.de:5000/iDempiere/web-services/production/reverse-production-confirmation(${confirmation.orderId})`
 				);
 				location.reload();
-			} catch (error) {
+			} catch (error: any) {
 				alert(error.response.data.error);
 				console.error(error);
 			}
